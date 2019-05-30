@@ -1,8 +1,8 @@
 {
-  "name": "radial-progress-chart",
-  "description": "Radial Progress Chart started as a weekend project. It's written on the top of D3.js and was heavily inspired by and D3 stub of Polar Clock",
-  "version": "0.0.4",
-  "repo": "git@github.com:pablomolnar/radial-progress-chart.git",
+  "name": "radial-progress-chart-with-tooltip",
+  "description": "Radial Progress Chart extension with tooltip",
+  "version": "0.0.1",
+  "repo": "git@github.com:guillembonet/radial-progress-chart.git",
   "scripts":[
     "index.js"
   ],
@@ -17,9 +17,10 @@
     "progress",
     "chart",
     "polar",
-    "d3"
+    "d3",
+    "tooltip"
   ],
-  "author": "Pablo Molnar",
+  "author": "Guillem Bonet",
   "development": {},
   "license": "MIT",
   "readmeFilename": "README.md"

@@ -8,11 +8,11 @@
 
 </head>
 <body>
-<script src="https://cdn.rawgit.com/bm-w/d3/master/d3.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="../index.js"></script>
 
-<div id="simple"></div>
-<div id="complex"></div>
+<div id="simple" style="width: 400px"></div>
+<div id="complex" style="width: 400px"></div>
 
 <script>
 
@@ -101,8 +101,6 @@
   //simple.update({series: [{value: 70}, 10, 45]})
 
   var options = {
-    min: 650,
-    max: 850,
     diameter: 200,
 //    center: function (value) {
 //      return "test:" + value;
@@ -114,15 +112,17 @@
         title: 'walk',
         labelStart: '\uF105',
         //labelEnd: '10m',
-        color: {
-          linearGradient: { x1: '0%', y1: '100%', x2: '50%', y2: '0%', spreadMethod: 'pad' },
-          stops: [
-            {offset: '0%', 'stop-color': '#fe08b5', 'stop-opacity': 1},
-            {offset: '100%', 'stop-color': '#ff1410', 'stop-opacity': 1}
-          ]},
-        // color: '#fe08b5',
+        color: '#fe08b5',
         // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
-        value: 800
+        value: 50
+      },
+      {
+        title: 'test',
+        labelStart: '\uF105',
+        //labelEnd: '10m',
+        color: '#fe08b5',
+        // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
+        value: 80
       }
     ]
   };

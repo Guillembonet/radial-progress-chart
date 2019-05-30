@@ -41,7 +41,7 @@ function RadialProgressChart(query, options) {
     return radius;
   }
 
-  self.progress = d3.svg.arc()
+  self.progress = d3.arc()
     .startAngle(0)
     .endAngle(function (item) {
       return item.percentage / 100 * τ;
@@ -55,17 +55,17 @@ function RadialProgressChart(query, options) {
       return (self.options.stroke.width / 2) * m;
     });
 
-  var background = d3.svg.arc()
+  var background = d3.arc()
     .startAngle(0)
     .endAngle(τ)
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
   // create svg
-  self.svg = d3.select(query).append("svg")
+  self.svg = d3.select(query).append("svg:svg")
     .attr("preserveAspectRatio","xMinYMin meet")
     .attr("viewBox", dim)
-    .append("g")
+    .append("svg:g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   // add gradients defs
@@ -78,7 +78,6 @@ function RadialProgressChart(query, options) {
   });
 
   // add shadows defs
-  defs = self.svg.append("svg:defs");
   var dropshadowId = "dropshadow-" + Math.random();
   var filter = defs.append("filter").attr("id", dropshadowId);
   if(self.options.shadow.width > 0) {
@@ -144,7 +143,10 @@ function RadialProgressChart(query, options) {
     .data(series)
     .enter().append("g");
 
-  self.field.append("path").attr("class", "progress").attr("filter", "url(#" + dropshadowId +")");
+  self.field.append("path")
+    .attr("class", "progress")
+    .attr("filter", "url(#" + dropshadowId +")");
+    
 
   self.field.append("path").attr("class", "bg")
     .style("fill", function (item) {
@@ -167,6 +169,16 @@ function RadialProgressChart(query, options) {
     .text(function (item) {
       return item.labelStart;
     });
+
+  //create tooltip
+  self.tooltip = d3.select(query)
+    .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden");
+  
+  self.tooltip.append("p");
 
   self.update();
 }
@@ -225,7 +237,7 @@ RadialProgressChart.prototype.update = function (data) {
       // delay between each item
       return i * self.options.animation.delay;
     })
-    .ease("elastic")
+    .ease(d3.easeElastic)
     .attrTween("d", function (item) {
       var interpolator = d3.interpolateNumber(item.fromPercentage, item.percentage);
       return function (t) {
@@ -268,6 +280,20 @@ RadialProgressChart.prototype.update = function (data) {
       if (item.color.linearGradient || item.color.radialGradient) {
         return "url(#gradient" + item.index + ')';
       }
+    });
+
+    d3.selectAll("path")
+    .on("mouseover", function(item){
+      self.tooltip.select('div > p').html(item.title + '<br/>' + item.value + '%')
+      return self.tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function(){
+      let width = self.tooltip.node().getBoundingClientRect().width
+      let height = self.tooltip.node().getBoundingClientRect().height
+      return self.tooltip.style("top", (event.pageY-height-10)+"px").style("left",(event.pageX-(width*0.2))+"px");
+    })
+    .on("mouseout", function(){
+      return self.tooltip.style("visibility", "hidden");
     });
 };
 
@@ -320,6 +346,7 @@ RadialProgressChart.normalizeOptions = function (options) {
       index: i,
       value: item.value,
       labelStart: item.labelStart,
+      title: item.title,
       color: RadialProgressChart.normalizeColor(item.color, defaultColorsIterator)
     };
   }
@@ -431,12 +458,16 @@ RadialProgressChart.Gradient = (function () {
 
   Gradient.toSVGElement = function (id, options) {
     var gradientType = options.linearGradient ? 'linearGradient' : 'radialGradient';
-    var gradient = d3.select(document.createElementNS(d3.ns.prefix.svg, gradientType))
-      .attr(options[gradientType])
-      .attr('id', id);
+    var gradient = d3.select(document.createElementNS(d3.namespaces.svg, gradientType)).attr("id", id);
+    Object.entries(options[gradientType]).forEach(function(option) {
+      gradient.attr(option[0], option[1]);
+    })
 
-    options.stops.forEach(function (stopAttrs) {
-      gradient.append("svg:stop").attr(stopAttrs);
+    Object.entries(options.stops).forEach(function (stopAttrs) {
+      var stop = gradient.append("svg:stop");
+      Object.entries(stopAttrs[1]).forEach(function (stopAttr) {
+        stop.attr(stopAttr[0], stopAttr[1]);
+      })
     });
 
     this.background = options.stops[0]['stop-color'];

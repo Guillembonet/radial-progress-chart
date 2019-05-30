@@ -1,15 +1,15 @@
 {
-  "name": "radial-progress-chart",
-  "description": "A customizable Radial Progress Chart written on the top of D3.js.",
-  "version": "0.0.4",
-  "repository": "git@github.com:pablomolnar/radial-progress-chart.git",
+  "name": "radial-progress-chart-with-tooltip",
+  "description": "Radial Progress Chart extension with tooltip",
+  "version": "0.0.1",
+  "repository": "git@github.com:guillembonet/radial-progress-chart.git",
   "scripts": {
     "test": "mocha",
     "build": "node browserify.js && ./node_modules/uglify-js/bin/uglifyjs ./dist/radial-progress-chart.js -m -o ./dist/radial-progress-chart.min.js",
     "hint": "./node_modules/jshint/bin/jshint index.js"
   },
   "dependencies": {
-    "d3": "^3.5.0"
+    "d3": "^5.9.2"
   },
   "devDependencies": {
     "browserify": "~10.2.4",
@@ -29,12 +29,12 @@
     "polar",
     "d3"
   ],
-  "author": "Pablo Molnar",
+  "author": "Guillem Bonet",
   "license": "MIT",
   "readmeFilename": "README.md",
   "spm": {
     "dependencies": {
-      "d3": "^3.5.0"
+      "d3": "^5.0.0"
     },
     "main": "index.js"
   }
