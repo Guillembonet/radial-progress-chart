@@ -19,7 +19,7 @@ svg {
     font-size: 95px;
 }
 
-.tooltip {
+.chart-tooltip {
     background: #fff;
     padding: 0em 1em;
     font-family: Ubuntu Mono, Verdana;
@@ -29,7 +29,7 @@ svg {
     max-height: 70px;
 }
 
-.tooltip:after, .tooltip:before {
+.chart-tooltip:after, .tooltip:before {
 	top: 100%;
 	left: 20%;
 	border: solid transparent;
@@ -40,13 +40,13 @@ svg {
 	pointer-events: none;
 }
 
-.tooltip:after {
+.chart-tooltip:after {
 	border-color: rgba(255, 255, 255, 0);
 	border-top-color: #ffffff;
 	border-width: 5px;
 	margin-left: -5px;
 }
-.tooltip:before {
+.chart-tooltip:before {
 	border-color: rgba(255, 255, 255, 0);
 	border-top-color: #ffffff;
 	border-width: 11px;
