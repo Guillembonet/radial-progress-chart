@@ -173,7 +173,7 @@ function RadialProgressChart(query, options) {
   //create tooltip
   self.tooltip = d3.select(query)
     .append("div")
-    .attr("class", "tooltip")
+    .attr("class", "chart-tooltip")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden");

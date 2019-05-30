@@ -1,8 +1,11 @@
 {
-  "name": "radial-progress-chart-with-tooltip",
+  "name": "@bunetz/radial-progress-chart-with-tooltip",
   "description": "Radial Progress Chart extension with tooltip",
   "version": "0.0.1",
-  "repository": "git@github.com:guillembonet/radial-progress-chart.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/guillembonet/radial-progress-chart.git"
+  },
   "scripts": {
     "test": "mocha",
     "build": "node browserify.js && ./node_modules/uglify-js/bin/uglifyjs ./dist/radial-progress-chart.js -m -o ./dist/radial-progress-chart.min.js",
@@ -31,11 +34,18 @@
   ],
   "author": "Guillem Bonet",
   "license": "MIT",
-  "readmeFilename": "README.md",
   "spm": {
     "dependencies": {
       "d3": "^5.0.0"
     },
     "main": "index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/guillembonet/radial-progress-chart/issues"
+  },
+  "homepage": "https://github.com/guillembonet/radial-progress-chart#readme",
+  "directories": {
+    "example": "examples",
+    "test": "test"
   }
 }
