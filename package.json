@@ -1,7 +1,7 @@
 {
   "name": "@bunetz/radial-progress-chart-with-tooltip",
   "description": "Radial Progress Chart extension with tooltip",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/guillembonet/radial-progress-chart.git"
