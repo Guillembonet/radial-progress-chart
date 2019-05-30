@@ -290,7 +290,7 @@ RadialProgressChart.prototype.update = function (data) {
     .on("mousemove", function(){
       let width = self.tooltip.node().getBoundingClientRect().width
       let height = self.tooltip.node().getBoundingClientRect().height
-      return self.tooltip.style("top", (event.pageY-height-10)+"px").style("left",(event.pageX-(width*0.2))+"px");
+      return self.tooltip.style("top", (event.layerY-height-10)+"px").style("left",(event.layerX-(width*0.2))+"px");
     })
     .on("mouseout", function(){
       return self.tooltip.style("visibility", "hidden");
