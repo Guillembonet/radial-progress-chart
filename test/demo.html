@@ -101,38 +101,30 @@
   //simple.update({series: [{value: 70}, 10, 45]})
 
   var options = {
-    diameter: 200,
-//    center: function (value) {
-//      return "test:" + value;
-//    },
-    //center: '300',
-    //center: ['300', '100'],
+    diameter: 150,
     series: [
       {
         title: 'walk',
         labelStart: '\uF105',
-        //labelEnd: '10m',
         color: '#fe08b5',
-        // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
-        value: 50
+        value: 101
       },
       {
         title: 'test',
         labelStart: '\uF105',
-        //labelEnd: '10m',
         color: '#fe08b5',
-        // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
-        value: 80
+        value: 99
       },
       {
         title: 'test',
         labelStart: '\uF106',
-        //labelEnd: '10m',
         color: '#feee33',
-        // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
-        value: 130
+        value: 100
       }
-    ]
+    ],
+    center: {
+      content: 'Progress'
+    }
   };
 
   var complex = new RadialProgressChart('#complex', options);

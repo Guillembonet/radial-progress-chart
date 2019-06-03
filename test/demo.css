@@ -1,5 +1,5 @@
 body {
-    background: black;
+    background: white;
 }
 
 svg {
@@ -15,8 +15,8 @@ svg {
 
 .rbc-center-text {
     font-family: 'Roboto', 'Myriad Set Pro', 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;
-    fill: white;
-    font-size: 95px;
+    fill: black;
+    font-size: 30px;
 }
 
 .chart-tooltip {

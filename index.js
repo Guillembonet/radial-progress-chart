@@ -49,10 +49,7 @@ function RadialProgressChart(query, options) {
     .innerRadius(self.innerRadius)
     .outerRadius(self.outerRadius)
     .cornerRadius(function (d) {
-      // Workaround for d3 bug https://github.com/mbostock/d3/issues/2249
-      // Reduce corner radius when corners are close each other
-      var m = d.percentage >= 90 ? (100 - d.percentage) * 0.1 : 1;
-      return (self.options.stroke.width / 2) * m;
+      return (self.options.stroke.width / 2);
     });
 
   var background = d3.arc()
@@ -267,7 +264,7 @@ RadialProgressChart.prototype.update = function (data) {
       }
     });
 
-    var circle = self.field.append("circle")
+  var circle = self.field.append("circle")
       .attr("cx", 0)
       .attr("cy", function(item) {
         return -((self.outerRadius(item) + self.innerRadius(item))/2)
@@ -319,7 +316,11 @@ RadialProgressChart.prototype.update = function (data) {
         return "url(#gradient" + item.index + ')';
       }
     })
-    .style("filter", "url(#dropshadow)");
+    .style("filter", function (item) {
+      if (item.percentage >= 100)
+        return "url(#dropshadow)"
+      else return null
+    });
 
     d3.selectAll("path")
     .on("mouseover", function(item){
