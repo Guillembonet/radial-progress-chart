@@ -152,6 +152,26 @@ function RadialProgressChart(query, options) {
       return item.labelStart;
     });
 
+  //create line end
+  self.field.append("circle")
+    .attr("cx", 0)
+    .attr("cy", function(item) {
+      return -((self.outerRadius(item) + self.innerRadius(item))/2)
+    })
+    .attr("r", function(item) {
+      return (self.outerRadius(item) - self.innerRadius(item))/2;
+    })
+    .attr("transform", function (item) {
+      var circleRadius = ((self.outerRadius(item) - self.innerRadius(item))/2)
+      var radius = ((self.outerRadius(item) + self.innerRadius(item))/2)
+      var offset = Math.asin(circleRadius/radius)/(Math.PI*2)*360
+      var angle = item.fromPercentage*360/100 - offset
+      while (angle >= 360)
+        angle -= 360
+      return "rotate(" + angle + ')'
+    })
+    .style("opacity", 0);
+
   //create tooltip
   self.tooltip = d3.select(query)
     .append("div")
@@ -263,27 +283,8 @@ RadialProgressChart.prototype.update = function (data) {
         return "url(#gradient" + item.index + ')';
       }
     });
-
-  var circle = self.field.append("circle")
-      .attr("cx", 0)
-      .attr("cy", function(item) {
-        return -((self.outerRadius(item) + self.innerRadius(item))/2)
-      })
-      .attr("r", function(item) {
-        return (self.outerRadius(item) - self.innerRadius(item))/2;
-      })
-      .attr("transform", function (item) {
-        var circleRadius = ((self.outerRadius(item) - self.innerRadius(item))/2)
-        var radius = ((self.outerRadius(item) + self.innerRadius(item))/2)
-        var offset = Math.asin(circleRadius/radius)/(Math.PI*2)*360
-        var angle = item.fromPercentage*360/100 - offset
-        while (angle >= 360)
-          angle -= 360
-        return "rotate(" + angle + ')'
-      })
-      .style("opacity", 0);
   
-  circle
+  self.field.select("circle")
     .interrupt()
     .transition()
     .duration(self.options.animation.duration)
