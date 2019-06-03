@@ -137,21 +137,6 @@ function RadialProgressChart(query, options) {
     .style("opacity", 0.2)
     .attr("d", background);
 
-  self.field.append("text")
-    .classed('rbc-label rbc-label-start', true)
-    .attr("dominant-baseline", "central")
-    .attr("x", "10")
-    .attr("y", function (item) {
-      return -(
-        self.options.diameter / 2 +
-        item.index * (self.options.stroke.gap + self.options.stroke.width) +
-        self.options.stroke.width / 2
-        );
-    })
-    .text(function (item) {
-      return item.labelStart;
-    });
-
   //create line end
   self.field.append("circle")
     .attr("cx", 0)
@@ -171,6 +156,21 @@ function RadialProgressChart(query, options) {
       return "rotate(" + angle + ')'
     })
     .style("opacity", 0);
+
+  self.field.append("text")
+    .classed('rbc-label rbc-label-start', true)
+    .attr("dominant-baseline", "central")
+    .attr("x", "10")
+    .attr("y", function (item) {
+      return -(
+        self.options.diameter / 2 +
+        item.index * (self.options.stroke.gap + self.options.stroke.width) +
+        self.options.stroke.width / 2
+        );
+    })
+    .text(function (item) {
+      return item.labelStart;
+    });
 
   //create tooltip
   self.tooltip = d3.select(query)
