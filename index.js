@@ -21,7 +21,7 @@ function RadialProgressChart(query, options) {
     , inner = []
     , outer = [];
 
-  function innerRadius(item) {
+  self.innerRadius = function(item) {
     var radius = inner[item.index];
     if (radius) return radius;
 
@@ -31,7 +31,7 @@ function RadialProgressChart(query, options) {
     return radius;
   }
 
-  function outerRadius(item) {
+  self.outerRadius = function(item) {
     var radius = outer[item.index];
     if (radius) return radius;
 
@@ -46,8 +46,8 @@ function RadialProgressChart(query, options) {
     .endAngle(function (item) {
       return item.percentage / 100 * τ;
     })
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius)
+    .innerRadius(self.innerRadius)
+    .outerRadius(self.outerRadius)
     .cornerRadius(function (d) {
       // Workaround for d3 bug https://github.com/mbostock/d3/issues/2249
       // Reduce corner radius when corners are close each other
@@ -58,8 +58,8 @@ function RadialProgressChart(query, options) {
   var background = d3.arc()
     .startAngle(0)
     .endAngle(τ)
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius);
+    .innerRadius(self.innerRadius)
+    .outerRadius(self.outerRadius);
 
   // create svg
   self.svg = d3.select(query).append("svg:svg")
@@ -78,25 +78,12 @@ function RadialProgressChart(query, options) {
   });
 
   // add shadows defs
-  var dropshadowId = "dropshadow-" + Math.random();
-  var filter = defs.append("filter").attr("id", dropshadowId);
-  if(self.options.shadow.width > 0) {
-    
-    filter.append("feGaussianBlur")
-      .attr("in", "SourceAlpha")
-      .attr("stdDeviation", self.options.shadow.width)
-      .attr("result", "blur");
-
-    filter.append("feOffset")
-      .attr("in", "blur")
-      .attr("dx", 1)
-      .attr("dy", 1)
-      .attr("result", "offsetBlur");
-  }
-
-  var feMerge = filter.append("feMerge");
-  feMerge.append("feMergeNode").attr("in", "offsetBlur");
-  feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+  var filter = defs.append("filter").attr("id", "dropshadow");
+  
+  filter.append("feDropShadow")
+      .attr("stdDeviation", "1 0")
+      .attr("dx", 3)
+      .attr("dy", 0);
 
   // add inner text
   if (self.options.center) {
@@ -144,9 +131,7 @@ function RadialProgressChart(query, options) {
     .enter().append("g");
 
   self.field.append("path")
-    .attr("class", "progress")
-    .attr("filter", "url(#" + dropshadowId +")");
-    
+    .attr("class", "progress");
 
   self.field.append("path").attr("class", "bg")
     .style("fill", function (item) {
@@ -174,7 +159,7 @@ function RadialProgressChart(query, options) {
   self.tooltip = d3.select(query)
     .append("div")
     .attr("class", "chart-tooltip")
-    .style("position", "absolute")
+    .style("position", "fixed")
     .style("z-index", "10")
     .style("visibility", "hidden");
   
@@ -282,6 +267,60 @@ RadialProgressChart.prototype.update = function (data) {
       }
     });
 
+    var circle = self.field.append("circle")
+      .attr("cx", 0)
+      .attr("cy", function(item) {
+        return -((self.outerRadius(item) + self.innerRadius(item))/2)
+      })
+      .attr("r", function(item) {
+        return (self.outerRadius(item) - self.innerRadius(item))/2;
+      })
+      .attr("transform", function (item) {
+        var circleRadius = ((self.outerRadius(item) - self.innerRadius(item))/2)
+        var radius = ((self.outerRadius(item) + self.innerRadius(item))/2)
+        var offset = Math.asin(circleRadius/radius)/(Math.PI*2)*360
+        var angle = item.fromPercentage*360/100 - offset
+        while (angle >= 360)
+          angle -= 360
+        return "rotate(" + angle + ')'
+      })
+      .style("opacity", 0);
+  
+  circle
+    .interrupt()
+    .transition()
+    .duration(self.options.animation.duration)
+    .delay(function (d, i) {
+      // delay between each item
+      return i * self.options.animation.delay;
+    })
+    .ease(d3.easeElastic)
+    .on('start',function() {
+      d3.select(this).style("opacity", 1)
+    })
+    .attrTween("transform", function (item) {
+      var interpolator = d3.interpolateNumber(item.fromPercentage, item.percentage);
+      var circleRadius = ((self.outerRadius(item) - self.innerRadius(item))/2)
+      var radius = ((self.outerRadius(item) + self.innerRadius(item))/2)
+      var offset = Math.asin(circleRadius/radius)/(Math.PI*2)*360
+      return function (t) {
+        var angle = interpolator(t)*360/100 - offset
+        while (angle >= 360)
+          angle -= 360
+        return "rotate(" + angle + ')'
+      };
+    })
+    .style("fill", function (item) {
+      if (item.color.solid) {
+        return item.color.solid;
+      }
+
+      if (item.color.linearGradient || item.color.radialGradient) {
+        return "url(#gradient" + item.index + ')';
+      }
+    })
+    .style("filter", "url(#dropshadow)");
+
     d3.selectAll("path")
     .on("mouseover", function(item){
       self.tooltip.select('div > p').html(item.title + '<br/>' + item.value + '%')
@@ -290,7 +329,7 @@ RadialProgressChart.prototype.update = function (data) {
     .on("mousemove", function(){
       let width = self.tooltip.node().getBoundingClientRect().width
       let height = self.tooltip.node().getBoundingClientRect().height
-      return self.tooltip.style("top", (event.layerY-height-10)+"px").style("left",(event.layerX-(width*0.2))+"px");
+      return self.tooltip.style("top", (event.y-height-10)+"px").style("left",(event.x-(width*0.2))+"px");
     })
     .on("mouseout", function(){
       return self.tooltip.style("visibility", "hidden");

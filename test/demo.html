@@ -33,7 +33,7 @@
     min: 650,
     max: 850,
 
-    series: [70, 10, 45],
+    series: [130, 10, 45],
     series: [
       {
         //title: 'walk',
@@ -89,7 +89,7 @@
   };
 
 
-  var simple = new RadialProgressChart('#simple', {series: [70, 10, 45]});
+  var simple = new RadialProgressChart('#simple', {series: [30, 60, 130]});
 
   //simple.series[1].value = 80;
   //simple.update();
@@ -123,6 +123,14 @@
         color: '#fe08b5',
         // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
         value: 80
+      },
+      {
+        title: 'test',
+        labelStart: '\uF106',
+        //labelEnd: '10m',
+        color: '#feee33',
+        // color: new RadialProgressChart.Color.Interpolate("#ff0000", "#0000ff")
+        value: 130
       }
     ]
   };
