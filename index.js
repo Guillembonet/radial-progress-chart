@@ -293,8 +293,9 @@ RadialProgressChart.prototype.update = function (data) {
       return i * self.options.animation.delay;
     })
     .ease(d3.easeElastic)
-    .on('start',function() {
-      d3.select(this).style("opacity", 1)
+    .on('start',function(item) {
+      if (item.percentage >= 5)
+        d3.select(this).style("opacity", 1)
     })
     .attrTween("transform", function (item) {
       var interpolator = d3.interpolateNumber(item.fromPercentage, item.percentage);
