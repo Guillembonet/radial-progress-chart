@@ -153,6 +153,7 @@ function RadialProgressChart(query, options) {
       var angle = item.fromPercentage*360/100 - offset
       while (angle >= 360)
         angle -= 360
+      if (isNaN(angle)) angle = 0
       return "rotate(" + angle + ')'
     })
     .style("opacity", 0);
@@ -306,6 +307,7 @@ RadialProgressChart.prototype.update = function (data) {
         var angle = interpolator(t)*360/100 - offset
         while (angle >= 360)
           angle -= 360
+        if (isNaN(angle)) angle = 0
         return "rotate(" + angle + ')'
       };
     })
